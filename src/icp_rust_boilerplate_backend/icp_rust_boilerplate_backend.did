@@ -1,3 +1,37 @@
+type Content = record {
+    id : nat64;
+    content : text;
+    author : text;
+    timestamp : nat64;
+};
+
+type Report = record {
+    content_id : nat64;
+    reason : text;
+    reporter : text;
+    timestamp : nat64;
+};
+
+type CommunityGuideline = record {
+    rule : text;
+    votes : nat64;
+    weighted_votes : float32;
+};
+
+type Result = variant {
+    Ok;
+    Err : text;
+};
+
 service : {
     "greet": (text) -> (text) query;
+    "submit_content": (Content) -> (Result);
+    "report_content": (nat64, text) -> (Result);
+    "get_content": (nat64) -> (opt Content) query;
+    "get_reports": (nat64) -> (vec Report) query;
+    "propose_guideline": (text) -> (Result);
+    "vote_guideline": (nat64, bool) -> (Result);
+    "get_guidelines": () -> (vec CommunityGuideline) query;
+    "update_reputation": (text, int64) -> (Result);
+    "moderate_content": (nat64) -> (Result);
 }
